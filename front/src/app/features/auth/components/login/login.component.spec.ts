@@ -1,4 +1,4 @@
-import { of, throwError } from 'rxjs';
+import {throwError } from 'rxjs';
 import { Router } from '@angular/router';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
@@ -87,7 +87,7 @@ describe('LoginComponent', () => {
     // Soumettre le formulaire
     component.submit();
 
-    // Vérifier que authService.login n'a pas été appelé car le formulaire est invalide
+    // Todo: Vérifier que authService.login n'a pas été appelé car le formulaire est invalide
     expect(authService.login).toHaveBeenCalled();
 
     // Vérifier que onError est passé à true
