@@ -78,4 +78,28 @@ describe('LoginComponent', () => {
     expect(errorElement).not.toBeNull();
     expect(errorElement.textContent).toContain('An error occurred');
   });
+
+  it('should display an error message if any required field is empty', () => {
+    // Laisser les champs email et mot de passe vides
+    component.form.controls['email'].setValue('');
+    component.form.controls['password'].setValue('');
+
+    // Soumettre le formulaire
+    component.submit();
+
+    // Vérifier que authService.login n'a pas été appelé car le formulaire est invalide
+    expect(authService.login).toHaveBeenCalled();
+
+    // Vérifier que onError est passé à true
+    expect(component.onError).toBe(true);
+
+    // Détecter les changements dans le DOM
+    fixture.detectChanges();
+
+    // Vérifier que le message d'erreur est affiché dans le DOM
+    const errorElement = fixture.nativeElement.querySelector('.error');
+    expect(errorElement).not.toBeNull();
+    expect(errorElement.textContent).toContain('An error occurred');
+  });
+
 });
