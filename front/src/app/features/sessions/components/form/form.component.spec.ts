@@ -10,6 +10,7 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterTestingModule } from '@angular/router/testing';
 import { expect } from '@jest/globals';
+import { By } from '@angular/platform-browser';
 import { SessionService } from 'src/app/services/session.service';
 import { SessionApiService } from '../../services/session-api.service';
 
@@ -23,7 +24,7 @@ describe('FormComponent', () => {
     sessionInformation: {
       admin: true
     }
-  } 
+  }
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -35,7 +36,7 @@ describe('FormComponent', () => {
         MatIconModule,
         MatFormFieldModule,
         MatInputModule,
-        ReactiveFormsModule, 
+        ReactiveFormsModule,
         MatSnackBarModule,
         MatSelectModule,
         BrowserAnimationsModule
@@ -55,5 +56,23 @@ describe('FormComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+  it('should hide the submit button when required input fields are not filled', () => {
+    // Set the form to invalid state by not filling in required fields
+    component.sessionForm?.controls['name'].setValue('');
+    component.sessionForm?.controls['date'].setValue('');
+    component.sessionForm?.controls['teacher_id'].setValue('');
+    component.sessionForm?.controls['description'].setValue('');
+
+    // Mark all controls as touched to trigger validation errors
+    component.sessionForm?.markAllAsTouched();
+
+    fixture.detectChanges();
+
+    // Check if the submit button is disabled
+    const submitButton = fixture.debugElement.query(By.css('button[type="submit"]'));
+
+    // Assert that the submit button is disabled
+    expect(submitButton.nativeElement.disabled).toBeTruthy();
   });
 });
