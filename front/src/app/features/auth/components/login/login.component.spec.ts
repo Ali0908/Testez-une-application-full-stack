@@ -53,7 +53,7 @@ describe('LoginComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should display an error message when login fails', () => {
+  it('unit test: should display an error message when login fails', () => {
     // Remplir le formulaire avec un email et un mot de passe
     component.form.controls['email'].setValue('test@example.com');
     component.form.controls['password'].setValue('wrongpassword');
@@ -79,7 +79,7 @@ describe('LoginComponent', () => {
     expect(errorElement.textContent).toContain('An error occurred');
   });
 
-  it('should display an error message if any required field is empty', () => {
+  it('unit test: should display an error message if any required field is empty', () => {
     // Laisser les champs email et mot de passe vides
     component.form.controls['email'].setValue('');
     component.form.controls['password'].setValue('');

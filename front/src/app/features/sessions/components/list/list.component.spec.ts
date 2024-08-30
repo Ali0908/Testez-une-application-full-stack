@@ -68,7 +68,7 @@ describe('ListComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should display session information correctly', () => {
+  it('unit test: should display session information correctly', () => {
     fixture.detectChanges(); // Trigger change detection to update the DOM
 
     const sessionCards = fixture.debugElement.queryAll(By.css('.item'));

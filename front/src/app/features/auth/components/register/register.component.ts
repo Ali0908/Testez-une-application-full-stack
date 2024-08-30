@@ -49,7 +49,7 @@ export class RegisterComponent {
 
   constructor(private authService: AuthService,
               private fb: FormBuilder,
-              private router: Router) {
+              public router: Router) {
   }
 
   public submit(): void {

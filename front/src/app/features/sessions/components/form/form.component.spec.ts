@@ -66,7 +66,7 @@ describe('FormComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
-  it('should hide the submit button when required input fields are not filled', () => {
+  it('unit test: should hide the submit button when required input fields are not filled', () => {
     // Set the form to invalid state by not filling in required fields
     component.sessionForm?.controls['name'].setValue('');
     component.sessionForm?.controls['date'].setValue('');
@@ -84,7 +84,7 @@ describe('FormComponent', () => {
     // Assert that the submit button is disabled
     expect(submitButton.nativeElement.disabled).toBeTruthy();
   });
-  it('should set input fields to non-null values when onUpdate is true', () => {
+  it('unit test: should set input fields to non-null values when onUpdate is true', () => {
     // Simulate the component being in update mode
     component.onUpdate = true;
 
