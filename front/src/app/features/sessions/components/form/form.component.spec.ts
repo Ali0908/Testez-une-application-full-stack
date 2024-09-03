@@ -109,4 +109,7 @@ describe('FormComponent', () => {
     expect(component.sessionForm?.controls['teacher_id'].value).toBe(mockSession.teacher_id);
     expect(component.sessionForm?.controls['description'].value).toBe(mockSession.description);
   });
+  it('integration test: should verify create session form submission', () => {
+
+  });
 });
