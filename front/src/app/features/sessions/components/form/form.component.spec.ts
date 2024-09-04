@@ -16,6 +16,8 @@ import { SessionApiService } from '../../services/session-api.service';
 
 import { FormComponent } from './form.component';
 import {Session} from "../../interfaces/session.interface";
+import {Router} from "@angular/router";
+import {of} from "rxjs";
 
 describe('FormComponent', () => {
   let component: FormComponent;
@@ -52,7 +54,7 @@ describe('FormComponent', () => {
       ],
       providers: [
         { provide: SessionService, useValue: mockSessionService },
-        SessionApiService
+        SessionApiService,
       ],
       declarations: [FormComponent]
     })
@@ -109,7 +111,42 @@ describe('FormComponent', () => {
     expect(component.sessionForm?.controls['teacher_id'].value).toBe(mockSession.teacher_id);
     expect(component.sessionForm?.controls['description'].value).toBe(mockSession.description);
   });
-  it('integration test: should verify create session form submission', () => {
+  it('integration test: should verify create session', () => {
+    // Step 1: Spy on the create method of the SessionApiService
+    const sessionApiService = TestBed.inject(SessionApiService);
+    const createSpy = jest.spyOn(sessionApiService, 'create').mockReturnValue(of(mockSession));
 
+    // Step 2: Spy on the Router navigate method
+    const router = TestBed.inject(Router);
+    const navigateSpy = jest.spyOn(router, 'navigate').mockImplementation(() => Promise.resolve(true));
+
+    // Step 3: Set up form values
+    component.sessionForm?.controls['name'].setValue(mockSession.name);
+    component.sessionForm?.controls['date'].setValue(new Date(mockSession.date).toISOString().split('T')[0]);
+    component.sessionForm?.controls['teacher_id'].setValue(mockSession.teacher_id);
+    component.sessionForm?.controls['description'].setValue(mockSession.description);
+    // console.log('Is form valid:', component.sessionForm?.valid); TODO: Delete this line  component.sessionForm?.valid: true
+
+    // Step 4: Trigger form submission
+    const submitButton = fixture.debugElement.query(By.css('button[type="submit"]'));
+    submitButton.nativeElement.click();
+    // const isSubmitButtonDisabled = submitButton.nativeElement.disabled;
+    // console.log('Is submit button disabled:', isSubmitButtonDisabled);
+    submitButton.nativeElement.disabled = false;
+    fixture.detectChanges(); // Ensure all changes are detected after form submission
+    console.log(createSpy.mock.calls);
+    // Step 5: Verify that the service's create method was called with the correct data
+    expect(createSpy).toHaveBeenCalledWith({
+      name: mockSession.name,
+      date: new Date(mockSession.date).toISOString().split('T')[0],
+      teacher_id: mockSession.teacher_id,
+      description: mockSession.description,
+      users: [], // Assuming this field is set elsewhere in the component or is an empty array by default
+    });
+
+    // Step 6: Verify that the navigation happened after the session was created
+    expect(navigateSpy).toHaveBeenCalledWith(['sessions']);
   });
+
+
 });
