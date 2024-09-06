@@ -17,7 +17,7 @@ export class FormComponent implements OnInit {
   public onUpdate: boolean = false;
   public sessionForm: FormGroup | undefined;
   public teachers$ = this.teacherService.all();
-  private id: string | undefined;
+  id: string | undefined;
 
   constructor(
     private route: ActivatedRoute,

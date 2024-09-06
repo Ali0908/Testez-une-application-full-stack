@@ -166,4 +166,50 @@ describe('FormComponent', () => {
     // Step 9: Verify that the navigation happened after the session was created
     expect(navigateSpy).toHaveBeenCalledWith(['sessions']);
   });
+
+  it('integration test: should verify update session', () => {
+    // Step 1: Set the component to update mode
+    component.onUpdate = true;
+    component.id = '123'; // Mock an existing session ID
+
+    // Initialize the form with the mock session data
+    component.initForm(mockSession);
+
+    // Step 2: Spy on the update method of the SessionApiService
+    const sessionApiService = TestBed.inject(SessionApiService);
+    const updateSpy = jest.spyOn(sessionApiService, 'update').mockReturnValue(of(mockSession));
+
+    // Step 3: Spy on the Router navigate method
+    const router = TestBed.inject(Router);
+    const navigateSpy = jest.spyOn(router, 'navigate').mockImplementation(() => Promise.resolve(true));
+
+    // Step 4: Set up form values like a user would after form is initialized
+    component.sessionForm?.controls['name'].setValue(mockSession.name);
+    component.sessionForm?.controls['date'].setValue(new Date(mockSession.date).toISOString().split('T')[0]);
+    component.sessionForm?.controls['teacher_id'].setValue(mockSession.teacher_id);
+    component.sessionForm?.controls['description'].setValue(mockSession.description);
+
+    // Step 5: Trigger change detection after form values are set
+    fixture.detectChanges();
+
+    // Step 6: Ensure the form is valid and the submit button is enabled
+    const submitButton = fixture.debugElement.query(By.css('button[type="submit"]'));
+    expect(submitButton.nativeElement.disabled).toBe(false);
+
+    // Step 7: Simulate button click
+    submitButton.nativeElement.click();
+    fixture.detectChanges(); // Ensure changes are reflected
+
+    // Step 8: Verify that the service's update method was called with the correct data
+    expect(updateSpy).toHaveBeenCalledWith('123', {
+      name: mockSession.name,
+      date: new Date(mockSession.date).toISOString().split('T')[0],
+      teacher_id: mockSession.teacher_id,
+      description: mockSession.description,
+    });
+
+    // Step 9: Verify that the navigation happened after the session was updated
+    expect(navigateSpy).toHaveBeenCalledWith(['sessions']);
+  });
+
 });
