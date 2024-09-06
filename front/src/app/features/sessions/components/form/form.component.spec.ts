@@ -38,6 +38,17 @@ describe('FormComponent', () => {
 
 
   beforeEach(async () => {
+    Object.defineProperty(HTMLElement.prototype, 'animate', {
+      value: () => ({
+        finished: Promise.resolve(), // Mocking the returned Promise
+        cancel: jest.fn(), // Mocking the cancel method
+        play: jest.fn(),   // Optionally mock other methods if needed
+        pause: jest.fn(),
+        addEventListener: jest.fn()// Optionally mock the pause method
+      }),
+    });
+
+
     await TestBed.configureTestingModule({
 
       imports: [
@@ -68,7 +79,7 @@ describe('FormComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
-  it('unit test: should hide the submit button when required input fields are not filled', () => {
+  it('should hide the submit button when required input fields are not filled', () => {
     // Set the form to invalid state by not filling in required fields
     component.sessionForm?.controls['name'].setValue('');
     component.sessionForm?.controls['date'].setValue('');
@@ -112,41 +123,47 @@ describe('FormComponent', () => {
     expect(component.sessionForm?.controls['description'].value).toBe(mockSession.description);
   });
   it('integration test: should verify create session', () => {
-    // Step 1: Spy on the create method of the SessionApiService
+    // Step 1: Trigger ngOnInit to ensure the form is initialized
+    component.ngOnInit(); // Call ngOnInit explicitly to ensure form initialization
+
+    // Step 2: Spy on the create method of the SessionApiService
     const sessionApiService = TestBed.inject(SessionApiService);
     const createSpy = jest.spyOn(sessionApiService, 'create').mockReturnValue(of(mockSession));
 
-    // Step 2: Spy on the Router navigate method
+    // Step 3: Spy on the Router navigate method
     const router = TestBed.inject(Router);
     const navigateSpy = jest.spyOn(router, 'navigate').mockImplementation(() => Promise.resolve(true));
 
-    // Step 3: Set up form values
+    // Step 4: Set up form values like a user would after form is initialized
     component.sessionForm?.controls['name'].setValue(mockSession.name);
     component.sessionForm?.controls['date'].setValue(new Date(mockSession.date).toISOString().split('T')[0]);
     component.sessionForm?.controls['teacher_id'].setValue(mockSession.teacher_id);
     component.sessionForm?.controls['description'].setValue(mockSession.description);
-    // console.log('Is form valid:', component.sessionForm?.valid); TODO: Delete this line  component.sessionForm?.valid: true
 
-    // Step 4: Trigger form submission
+    // Since the form in the component doesn't have 'users', you should remove the line interacting with 'users' unless you add this control in your component mock data.
+    // component.sessionForm?.controls['users'].setValue(mockSession.users); // Remove this line
+
+    // Step 5: Trigger change detection after form values are set
+    fixture.detectChanges();
+
+    // Step 6: Ensure the form is valid and the submit button is enabled
     const submitButton = fixture.debugElement.query(By.css('button[type="submit"]'));
+    expect(submitButton.nativeElement.disabled).toBe(false);
+
+    // Step 7: Simulate button click
     submitButton.nativeElement.click();
-    // const isSubmitButtonDisabled = submitButton.nativeElement.disabled;
-    // console.log('Is submit button disabled:', isSubmitButtonDisabled);
-    submitButton.nativeElement.disabled = false;
-    fixture.detectChanges(); // Ensure all changes are detected after form submission
-    console.log(createSpy.mock.calls);
-    // Step 5: Verify that the service's create method was called with the correct data
+    fixture.detectChanges(); // Ensure changes are reflected
+
+    // Step 8: Verify that the service's create method was called with the correct data
     expect(createSpy).toHaveBeenCalledWith({
       name: mockSession.name,
       date: new Date(mockSession.date).toISOString().split('T')[0],
       teacher_id: mockSession.teacher_id,
       description: mockSession.description,
-      users: [], // Assuming this field is set elsewhere in the component or is an empty array by default
+      // users: [] // Assuming this field is an empty array by default or managed elsewhere
     });
 
-    // Step 6: Verify that the navigation happened after the session was created
+    // Step 9: Verify that the navigation happened after the session was created
     expect(navigateSpy).toHaveBeenCalledWith(['sessions']);
   });
-
-
 });
