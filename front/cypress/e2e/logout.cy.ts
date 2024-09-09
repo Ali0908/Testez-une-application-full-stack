@@ -1,40 +1,42 @@
 describe('Logout spec', () => {
   beforeEach(() => {
-    cy.visit('/login')
+    // Visit the login page
+    cy.visit('/login');
 
+    // Mock the login API response
     cy.intercept('POST', '/api/auth/login', {
       body: {
         id: 1,
         username: 'userName',
         firstName: 'firstName',
         lastName: 'lastName',
-        admin: true
+        admin: true,
       },
-    })
+    });
 
-    cy.intercept('GET', '/api/session', []).as('session')
+    // Mock session data retrieval
+    cy.intercept('GET', '/api/session', []).as('session');
 
-    cy.get('input[formControlName=email]').type("yoga@studio.com")
-    cy.get('input[formControlName=password]').type(`${"test!1234"}{enter}{enter}`)
+    // Perform login action
+    cy.get('input[formControlName=email]').type('yoga@studio.com');
+    cy.get('input[formControlName=password]').type('test!1234{enter}{enter}');
 
-    cy.url().should('include', '/sessions')
-  })
+    // Ensure the URL contains '/sessions' after login
+    cy.url().should('include', '/sessions');
+  });
 
-  it('should log out successfully and redirect to login page', () => {
+  it('should log out successfully and redirect to root page', () => {
+    // Ensure the logout button or span in app.component.html is present and clickable
+    cy.get('app-root span').contains('Logout').should('be.visible').click();
 
-    cy.visit('/session/')
-    // Ensure the logout button or span is present and clickable
-    cy.get('span').contains('Logout').should('be.visible').click()
+    // Check that the app navigates to the root URL
+    cy.location('pathname').should('eq', '/'); // This verifies the redirection to the root URL
 
-    // Debug the redirection
-    cy.url().should('include', '/login')
-    cy.location('pathname').should('eq', '/login')  // Confirm the URL path
+    // Check that session information is cleared from localStorage
+    cy.window().its('localStorage').invoke('getItem', 'session').should('be.null');
 
-    // Optionally check that session information is cleared
-    cy.window().its('localStorage').invoke('getItem', 'session').should('be.null')
-
-    // Verify that the user sees the login form
-    cy.get('input[formControlName=email]').should('exist')
-    cy.get('input[formControlName=password]').should('exist')
-  })
-})
+    // Verify that the login and register links are visible on the root page
+    cy.get('span').contains('Login').should('exist');
+    cy.get('span').contains('Register').should('exist');
+  });
+});
