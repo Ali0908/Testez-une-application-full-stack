@@ -29,6 +29,8 @@ public class SessionServiceTest {
         MockitoAnnotations.openMocks(this);
     }
 
+    // Unit tests for SessionService
+
     @Test
     void testFindAll() {
         // Arrange: Mock the data
@@ -87,4 +89,26 @@ public class SessionServiceTest {
         assertNull(result);
     }
 
+    @Test
+    void testUpdate() {
+        // Arrange: Set up mock data
+        Long sessionId = 1L;
+        Session sessionToUpdate = new Session();
+        sessionToUpdate.setName("Updated Session Name");
+
+        // Mock the behavior of sessionRepository.save() to return the updated session
+        Session updatedSession = new Session();
+        updatedSession.setId(sessionId);
+        updatedSession.setName("Updated Session Name");
+
+        // When the sessionRepository.save() is called, return the updatedSession
+        when(sessionRepository.save(sessionToUpdate)).thenReturn(updatedSession);
+
+        // Act: Call the update method of SessionService
+        Session result = sessionService.update(sessionId, sessionToUpdate);
+
+        // Assert: Verify that the session's ID was set and the name is updated
+        assertEquals(sessionId, result.getId());
+        assertEquals("Updated Session Name", result.getName());
+    }
 }
