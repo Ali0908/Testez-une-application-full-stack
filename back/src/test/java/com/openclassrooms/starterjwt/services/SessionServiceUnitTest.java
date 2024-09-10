@@ -15,8 +15,10 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.times;
 
-public class SessionServiceTest {
+public class SessionServiceUnitTest {
     @Mock
     private SessionRepository sessionRepository;
 
@@ -29,7 +31,6 @@ public class SessionServiceTest {
         MockitoAnnotations.openMocks(this);
     }
 
-    // Unit tests for SessionService
 
     @Test
     void testFindAll() {
@@ -110,5 +111,17 @@ public class SessionServiceTest {
         // Assert: Verify that the session's ID was set and the name is updated
         assertEquals(sessionId, result.getId());
         assertEquals("Updated Session Name", result.getName());
+    }
+
+    @Test
+    void testDelete() {
+        // Arrange: Define the session ID to be deleted
+        Long sessionId = 1L;
+
+        // Act: Call the delete method
+        sessionService.delete(sessionId);
+
+        // Assert: Verify that sessionRepository.deleteById() was called with the correct ID
+        verify(sessionRepository, times(1)).deleteById(sessionId);
     }
 }
