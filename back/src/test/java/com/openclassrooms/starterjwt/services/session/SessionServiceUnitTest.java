@@ -1,7 +1,8 @@
-package com.openclassrooms.starterjwt.services;
+package com.openclassrooms.starterjwt.services.session;
 
 import com.openclassrooms.starterjwt.models.Session;
 import com.openclassrooms.starterjwt.repository.SessionRepository;
+import com.openclassrooms.starterjwt.services.SessionService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
