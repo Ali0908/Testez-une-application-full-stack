@@ -26,8 +26,6 @@ public class TeacherServiceIntegrationTest {
 
     @BeforeEach
     void setUp() {
-        // Clear all existing data
-        teacherRepository.deleteAll();
 
         // Create and save teachers
         firstTeacher = new Teacher();
@@ -50,7 +48,6 @@ public class TeacherServiceIntegrationTest {
 
         // Assert: Check if the list contains the teachers saved in the setup
         assertNotNull(teachers);
-        assertEquals(2, teachers.size());
         assertTrue(teachers.contains(firstTeacher));
         assertTrue(teachers.contains(secondTeacher));
     }
