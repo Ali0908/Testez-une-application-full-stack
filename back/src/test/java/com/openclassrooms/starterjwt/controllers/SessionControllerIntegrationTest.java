@@ -223,15 +223,102 @@ public class SessionControllerIntegrationTest {
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
     }
 
-/*    @Test
-    public void testDelete_Success() {
-                // URL to delete the existing session
-                String url = "/api/session/" + deletingSession.getId();
-                HttpHeaders headers = new HttpHeaders();
-                headers.setBearerAuth(jwtToken);  // Add the JWT token to headers
-                HttpEntity<Void> entity = new HttpEntity<>(headers);
-                ResponseEntity<?> response = restTemplate.exchange(url, HttpMethod.DELETE, entity, Object.class);
-                // Assert: Check the response status is OK
-                assertEquals(HttpStatus.OK, response.getStatusCode());
-        }*/
+//    @Test
+//    public void testDelete_Success() {
+//                // URL to delete the existing session
+//                String url = "/api/session/" + deletingSession.getId();
+//                HttpHeaders headers = new HttpHeaders();
+//                headers.setBearerAuth(jwtToken);  // Add the JWT token to headers
+//                HttpEntity<Void> entity = new HttpEntity<>(headers);
+//                ResponseEntity<?> response = restTemplate.exchange(url, HttpMethod.DELETE, entity, Object.class);
+//                // Assert: Check the response status is OK
+//                assertEquals(HttpStatus.OK, response.getStatusCode());
+//        }
+    @Test
+    public void testParticipate_Success() {
+        // Arrange: Set up valid sessionId and userId
+        Long validSessionId = existingSession.getId(); // Assuming this session exists
+        // TODO: Check if the user exists in the database
+        Long validUserId = 3L; // Assuming this user exists
+
+        // URL for participate method
+        String url = "/api/session/" + validSessionId + "/participate/" + validUserId;
+
+        // Set headers and authentication token
+        HttpHeaders headers = new HttpHeaders();
+        headers.setBearerAuth(jwtToken);
+
+        HttpEntity<Void> entity = new HttpEntity<>(headers);
+
+        // Act: Send POST request to participate
+        ResponseEntity<?> response = restTemplate.exchange(url, HttpMethod.POST, entity, Object.class);
+
+        // Assert: Verify the response status is OK (200)
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+    }
+
+    @Test
+    public void testParticipate_BadRequest() {
+        // Arrange: Set up invalid sessionId and userId (non-numeric ID strings)
+        String invalidSessionId = "invalid-session-id";
+        String invalidUserId = "invalid-user-id";
+
+        // URL for participate method with invalid IDs
+        String url = "/api/session/" + invalidSessionId + "/participate/" + invalidUserId;
+
+        // Set headers and authentication token
+        HttpHeaders headers = new HttpHeaders();
+        headers.setBearerAuth(jwtToken);
+
+        HttpEntity<Void> entity = new HttpEntity<>(headers);
+
+        // Act: Send POST request to participate
+        ResponseEntity<?> response = restTemplate.exchange(url, HttpMethod.POST, entity, Object.class);
+
+        // Assert: Verify the response status is BAD_REQUEST (400)
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+    }
+
+    @Test
+    public void testNoLongerParticipate_Success() {
+        // Arrange: Set up valid sessionId and userId
+        Long validSessionId = existingSession.getId();
+        Long validUserId = 3L; // Assuming this user exists and was participating
+
+        // URL for noLongerParticipate method
+        String url = "/api/session/" + validSessionId + "/participate/" + validUserId;
+
+        // Set headers with JWT token
+        HttpHeaders headers = new HttpHeaders();
+        headers.setBearerAuth(jwtToken);
+
+        HttpEntity<Void> entity = new HttpEntity<>(headers);
+
+        // Act: Send DELETE request to noLongerParticipate
+        ResponseEntity<?> response = restTemplate.exchange(url, HttpMethod.DELETE, entity, Object.class);
+
+        // Assert: Verify the response status is OK (200)
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+    }
+    @Test
+    public void testNoLongerParticipate_NotFound() {
+        // Arrange: Use a non-existing sessionId and userId
+        Long nonExistingSessionId = 999L;
+        Long nonExistingUserId = 999L;
+
+        // URL for noLongerParticipate method with non-existing IDs
+        String url = "/api/session/" + nonExistingSessionId + "/participate/" + nonExistingUserId;
+
+        // Set headers with JWT token
+        HttpHeaders headers = new HttpHeaders();
+        headers.setBearerAuth(jwtToken);
+
+        HttpEntity<Void> entity = new HttpEntity<>(headers);
+
+        // Act: Send DELETE request
+        ResponseEntity<?> response = restTemplate.exchange(url, HttpMethod.DELETE, entity, Object.class);
+
+        // Assert: Verify the response status is NOT_FOUND (404)
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+    }
 }
