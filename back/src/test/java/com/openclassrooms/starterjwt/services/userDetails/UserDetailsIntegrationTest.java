@@ -10,13 +10,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-
-import java.util.Random;
+import org.springframework.transaction.annotation.Transactional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
-public class userDetailsIntegrationTest {
+@Transactional
+public class UserDetailsIntegrationTest {
+
     @Autowired
     private UserRepository userRepository;
 
@@ -27,11 +28,9 @@ public class userDetailsIntegrationTest {
 
     @BeforeEach
     public void setUp() {
-        // Prepare a test user and save it to the repository
+        // Prepare a test user with a unique email and save it to the repository
         testUser = new User();
-        Random random = new Random();
-        int randomInt = random.nextInt(1000);
-        String uniqueEmail = "paul" + randomInt + "@smith.com"; // Generates a unique email for each test run
+        String uniqueEmail = "paul" + Math.random() + "@smith.com"; // Generates a unique email for each test run
         testUser.setEmail(uniqueEmail);
         testUser.setLastName("Paul");
         testUser.setFirstName("Smith");
@@ -49,9 +48,8 @@ public class userDetailsIntegrationTest {
 
     @Test
     public void testLoadUserByUsername_Success() {
-        String email = testUser.getEmail();
         // Act
-        UserDetails userDetails = userDetailsService.loadUserByUsername(email);
+        UserDetails userDetails = userDetailsService.loadUserByUsername(testUser.getEmail());
 
         // Assert: Validate the user details
         assertNotNull(userDetails);
@@ -62,8 +60,6 @@ public class userDetailsIntegrationTest {
     @Test
     public void testLoadUserByUsername_UserNotFound() {
         // Act & Assert
-        assertThrows(UsernameNotFoundException.class, () -> {
-            userDetailsService.loadUserByUsername("unknow@example.com");
-        });
+        assertThrows(UsernameNotFoundException.class, () -> userDetailsService.loadUserByUsername("unknown@example.com"));
     }
 }
