@@ -1,5 +1,6 @@
 package com.openclassrooms.starterjwt.dto;
 
+import com.openclassrooms.starterjwt.models.Teacher;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -36,4 +37,5 @@ public class SessionDto {
     private LocalDateTime createdAt;
 
     private LocalDateTime updatedAt;
+
 }
