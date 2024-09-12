@@ -17,9 +17,6 @@ import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.*;
 
 import javax.transaction.Transactional;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 
 import java.util.Date;
 import java.util.List;
@@ -36,19 +33,24 @@ public class SessionControllerIntegrationTest {
     private SessionRepository sessionRepository;
 
     @Autowired
-    private SessionService sessionService;
-
-    @Autowired
     private SessionMapper sessionMapper;
 
     private Session existingSession;
+    private Session updatingSession;
+    private Session deletingSession;
     private String jwtToken;
 
     @BeforeEach
     public void setUp() {
         // Fetch the existing teacher with ID 1 from the database
-        existingSession = sessionRepository.findById(1L).orElseThrow(() ->
-                new IllegalStateException("Session with ID 1 not found in the database"));
+        existingSession = sessionRepository.findById(2L).orElseThrow(() ->
+                new IllegalStateException("Session with ID 2 not found in the database"));
+        // Fetch the existing teacher with ID 1 from the database
+        updatingSession = sessionRepository.findById(68L).orElseThrow(() ->
+                new IllegalStateException("Session with ID 68 not found in the database"));
+        // Fetch the existing teacher with ID 1 from the database
+        deletingSession = sessionRepository.findById(67L).orElseThrow(() ->
+                new IllegalStateException("Session with ID 67L not found in the database"));
 
         this.jwtToken = authenticateAndGetToken();
     }
@@ -158,14 +160,6 @@ public class SessionControllerIntegrationTest {
         // Assert: Check the response status and body
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertNotNull(response.getBody());
-
-        // Todo : Verify that the session is correctly saved in the database -> Failed session with ID 58 not found in the database
-//        Session createdSession = sessionRepository.findById(response.getBody().getId()).orElseThrow(() ->
-//                new IllegalStateException("Session with ID " + response.getBody().getId() + " not found in the database"));
-//
-//        assertEquals(newSessionDto.getName(), createdSession.getName());
-//        assertEquals(newSessionDto.getDate(), createdSession.getDate());
-//        assertEquals(newSessionDto.getDescription(), createdSession.getDescription());
     }
 
     @Test
@@ -188,20 +182,52 @@ public class SessionControllerIntegrationTest {
     @Test
     public void testUpdate_Success() {
         // Prepare an empty session DTO (assuming update can succeed even without changes)
-        SessionDto updateSessionDto = new SessionDto();
-        updateSessionDto.setName("Test session update");
-        updateSessionDto.setDate(new Date());
-        updateSessionDto.setTeacher_id(15L);
-        updateSessionDto.setDescription("Updated description");
+        // Transfer the existing session data to the DTO
+        SessionDto updatingSessionDTO = sessionMapper.toDto(updatingSession);
+        updatingSessionDTO.setName("Test session update");
+        updatingSessionDTO.setDate(new Date());
+        updatingSessionDTO.setTeacher_id(15L);
+        updatingSessionDTO.setDescription("Updated description");
 
-        String url = "/api/session/" + existingSession.getId();
+        String url = "/api/session/" + updatingSession.getId();
         HttpHeaders headers = new HttpHeaders();
         headers.setBearerAuth(jwtToken);  // Add the JWT token to headers
         headers.setContentType(MediaType.APPLICATION_JSON);
-        HttpEntity<SessionDto> entity = new HttpEntity<>(updateSessionDto, headers);
+        HttpEntity<SessionDto> entity = new HttpEntity<>(updatingSessionDTO, headers);
 
         // Send PUT request
         ResponseEntity<?> response = restTemplate.exchange(url, HttpMethod.PUT, entity, Object.class);
+
+        // Assert: Check the response status is OK
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+    }
+
+
+    @Test
+    public void testDelete_NotFound() {
+        // URL to delete a non-existing session
+        String url = "/api/session/999";
+        HttpHeaders headers = new HttpHeaders();
+        headers.setBearerAuth(jwtToken);  // Add the JWT token to headers
+        HttpEntity<Void> entity = new HttpEntity<>(headers);
+
+        // Send DELETE request
+        ResponseEntity<?> response = restTemplate.exchange(url, HttpMethod.DELETE, entity, Object.class);
+
+        // Assert: Check the response status is NotFound
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+    }
+
+    @Test
+    public void testDelete_Success() {
+        // URL to delete the existing session
+        String url = "/api/session/" + deletingSession.getId();
+        HttpHeaders headers = new HttpHeaders();
+        headers.setBearerAuth(jwtToken);  // Add the JWT token to headers
+        HttpEntity<Void> entity = new HttpEntity<>(headers);
+
+        // Send DELETE request
+        ResponseEntity<?> response = restTemplate.exchange(url, HttpMethod.DELETE, entity, Object.class);
 
         // Assert: Check the response status is OK
         assertEquals(HttpStatus.OK, response.getStatusCode());
