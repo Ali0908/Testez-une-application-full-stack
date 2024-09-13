@@ -118,7 +118,51 @@ public class UserEntityIntegrationTest {
         User anotherUser = new User(1L, "jane.doe@example.com", "Doe", "Jane", "password123", false, LocalDateTime.now(), LocalDateTime.now());
         assertTrue(user.canEqual(anotherUser));
     }
+    @Test
+    public void testUserBuilder_BuildCompleteUser() {
+        // Arrange
+        String email = "john.doe@example.com";
+        String lastName = "Doe";
+        String firstName = "John";
+        String password = "password123";
 
+        User user = User.builder()
+                .email(email)
+                .lastName(lastName)
+                .firstName(firstName)
+                .password(password)
+                .build();
+
+        // Assert: User object should have the set values
+        assertEquals(email, user.getEmail());
+        assertEquals(lastName, user.getLastName());
+        assertEquals(firstName, user.getFirstName());
+        assertEquals(password, user.getPassword());
+    }
+
+    @Test
+    public void testUserBuilder_ToString() {
+        // Arrange
+        String email = "john.doe@example.com";
+        String password = "password123";
+        String lastName = "Doe";
+        String firstName = "John";
+
+        User user = User.builder()
+                .email(email)
+                .password(password)
+                .lastName(lastName)
+                .firstName(firstName)
+                .build();
+
+        // Act
+        String userString = user.toString();
+
+        // Assert: String should contain expected information (adapt based on expected format)
+        assertTrue(userString.contains(email));
+        assertTrue(userString.contains(lastName));
+        assertTrue(userString.contains(firstName)); // Adjust if not included
+    }
 
 
 }
