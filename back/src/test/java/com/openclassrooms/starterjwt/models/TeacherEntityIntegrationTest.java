@@ -88,4 +88,25 @@ public class TeacherEntityIntegrationTest {
         assertEquals(newUpdatedAt, teacher.getUpdatedAt());
     }
 
+
+    @Test
+    public void testTeacherBuilder_StringMethod() {
+        // Arrange
+        Teacher teacher = Teacher.builder()
+                .id(1L)
+                .lastName("Doe")
+                .firstName("John")
+                .createdAt(LocalDateTime.now())
+                .updatedAt(LocalDateTime.now())
+                .build();
+
+        // Act
+        String teacherString = teacher.toString();
+
+        // Assert
+        // Assuming the string representation contains the id and last name
+        assertTrue(teacherString.contains("1"));
+        assertTrue(teacherString.contains("Doe"));
+    }
+
 }
