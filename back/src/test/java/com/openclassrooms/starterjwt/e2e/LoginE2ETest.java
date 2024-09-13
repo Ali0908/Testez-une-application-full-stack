@@ -31,23 +31,29 @@
 //    @Test
 //    public void testLogin() {
 //        // Navigate to login page
-//        driver.get("http://localhost:8080/api/auth/login");
+//        driver.get("http://localhost:4200/api/login");
 //
 //        // Find the email input field and enter email
-//        WebElement emailField = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("email")));
+//        WebElement emailField = wait.until(ExpectedConditions.presenceOfElementLocated(By.id("email")));
 //        emailField.sendKeys("louis@test.com");
 //
 //        // Find the password input field and enter password
-//        WebElement passwordField = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("password")));
+//        WebElement passwordField = wait.until(ExpectedConditions.presenceOfElementLocated(By.id("password")));
 //        passwordField.sendKeys("password");
 //
 //        // Find the login button and click it
 //        WebElement loginButton = wait.until(ExpectedConditions.elementToBeClickable(By.id("loginButton")));
 //        loginButton.click();
 //
-//        // Verify successful login by checking the redirected page or content
-//        WebElement successMessage = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("successMessage")));
-//        assertEquals("Login successful!", successMessage.getText());
+//        // Verify successful login by checking the redirected page (or use a specific element within the success page)
+//        // This assumes the successful login redirects to a different page
+//        wait.until(ExpectedConditions.urlContains("dashboard")); // Wait for URL to contain "dashboard"
+//
+//        // Alternatively, check for a specific element after login
+//    /*
+//    WebElement successMessage = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("successMessage")));
+//    assertEquals("Login successful!", successMessage.getText());
+//    */
 //    }
 //
 //    @AfterEach

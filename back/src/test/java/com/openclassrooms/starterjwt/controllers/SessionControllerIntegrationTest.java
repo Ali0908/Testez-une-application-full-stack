@@ -185,6 +185,7 @@ public class SessionControllerIntegrationTest {
         // Assert: Check the response status is BadRequest
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
     }
+
     @Test
     public void testUpdate_Success() {
         // Transfer the existing session data to the DTO

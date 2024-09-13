@@ -164,6 +164,48 @@ public class UserEntityIntegrationTest {
         assertTrue(userString.contains(firstName)); // Adjust if not included
     }
 
+    @Test
+    public void testEqualsAndHashCode() {
+        User user1 = User.builder()
+                .id(1L)
+                .email("user1@example.com")
+                .firstName("John")
+                .lastName("Doe")
+                .password("password123")
+                .build();
+        User user2 = User.builder()
+                .id(1L)
+                .email("user2@example.com")
+                .firstName("Paul")
+                .lastName("Smith")
+                .password("password456")
+                .build();
+        User user3 = User.builder()
+                .id(2L)
+                .email("user3@example.com")
+                .firstName("Sam")
+                .lastName("Brown")
+                .password("password789")
+                .build();
 
+        assertEquals(user1, user2); // Equal due to same id
+        assertNotEquals(user1, user3); // Not equal due to different id
+    }
+
+    @Test
+    public void testBuilder() {
+        User user = User.builder()
+                .id(1L)
+                .email("user3@example.com")
+                .firstName("Sam")
+                .lastName("Brown")
+                .password("password789")
+                .build();
+
+        assertEquals(1L, user.getId());
+        assertEquals("user3@example.com", user.getEmail());
+        assertEquals("Sam", user.getFirstName());
+        assertEquals("Brown", user.getLastName());
+    }
 }
 
