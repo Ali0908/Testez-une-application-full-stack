@@ -88,4 +88,56 @@ public class JwtUtilsIntegrationTest {
         // Assert: The token should be expired and therefore invalid
         assertFalse(isValid);
     }
+
+    @Test
+    public void testValidateJwtToken_InvalidSignature() {
+        // Arrange: Create a token and tamper with the signature
+        String token = jwtUtils.generateJwtToken(authentication);
+        String invalidSignatureToken = token + "tampered";
+
+        // Act: Validate the tampered token
+        boolean isValid = jwtUtils.validateJwtToken(invalidSignatureToken);
+
+        // Assert: The token should be invalid due to the tampered signature
+        assertFalse(isValid);
+    }
+
+    @Test
+    public void testValidateJwtToken_UnsupportedToken() {
+        // Arrange: Create an unsupported token (using an incorrect format)
+        String unsupportedToken = "unsupported.jwt.token";
+
+        // Act: Validate the unsupported token
+        boolean isValid = jwtUtils.validateJwtToken(unsupportedToken);
+
+        // Assert: The token should be invalid due to unsupported format
+        assertFalse(isValid);
+    }
+
+    @Test
+    public void testValidateJwtToken_EmptyClaims() {
+        // Arrange: Use an empty JWT token
+        String emptyToken = "";
+
+        // Act: Validate the empty token
+        boolean isValid = jwtUtils.validateJwtToken(emptyToken);
+
+        // Assert: The token should be invalid due to empty claims
+        assertFalse(isValid);
+    }
+
+    @Test
+    public void testValidateJwtToken_MalformedToken() {
+        // Arrange: Create a malformed token (missing parts)
+        String malformedToken = "malformed.token";
+
+        // Act: Validate the malformed token
+        boolean isValid = jwtUtils.validateJwtToken(malformedToken);
+
+        // Assert: The token should be invalid due to its malformed structure
+        assertFalse(isValid);
+    }
+
+
+
 }
