@@ -100,12 +100,23 @@ public class SignupRequestUnitTest {
         signupRequest2.setLastName("Doe");
         signupRequest2.setPassword("password123");
 
+        SignupRequest signupRequest3 = new SignupRequest();
+        signupRequest3.setEmail("different@example.com");
+        signupRequest3.setFirstName("Jane");
+        signupRequest3.setLastName("Smith");
+        signupRequest3.setPassword("differentPassword");
+
         // Act & Assert
         assertTrue(signupRequest1.equals(signupRequest2), "SignupRequests with the same fields should be equal");
+        assertTrue(signupRequest2.equals(signupRequest1), "SignupRequests with the same fields should be equal (symmetry)");
         assertTrue(signupRequest1.equals(signupRequest1), "SignupRequest should be equal to itself");
         assertFalse(signupRequest1.equals(null), "SignupRequest should not be equal to null");
         assertFalse(signupRequest1.equals(new Object()), "SignupRequest should not be equal to an object of another class");
+
+        // Test inequality with different fields
+        assertFalse(signupRequest1.equals(signupRequest3), "SignupRequests with different fields should not be equal");
     }
+
 
     @Test
     public void testHashCode() {

@@ -1,14 +1,25 @@
 package com.openclassrooms.starterjwt.models;
 
+import com.openclassrooms.starterjwt.repository.TeacherRepository;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import javax.validation.ConstraintViolation;
+import javax.validation.Validation;
+import javax.validation.Validator;
+import javax.validation.ValidatorFactory;
 import java.time.LocalDateTime;
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 public class TeacherEntityIntegrationTest {
+
+
+    @Autowired
+    private TeacherRepository teacherRepository;
 
     @Test
     public void testConstructor_AllArgs() {
@@ -108,5 +119,66 @@ public class TeacherEntityIntegrationTest {
         assertTrue(teacherString.contains("1"));
         assertTrue(teacherString.contains("Doe"));
     }
+
+    @Test
+    public void testTeacherFieldValidation() {
+        // Arrange: Create a validator
+        ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
+        Validator validator = factory.getValidator();
+
+        // Create a teacher with invalid data
+        Teacher teacher = new Teacher();
+        teacher.setLastName(""); // Invalid: NotBlank constraint
+        teacher.setFirstName(""); // Invalid: NotBlank constraint
+
+        // Act: Validate the teacher object
+        Set<ConstraintViolation<Teacher>> violations = validator.validate(teacher);
+
+        // Assert: There should be violations
+        assertFalse(violations.isEmpty());
+    }
+
+//    @Test
+//    public void testCreatedAt_Field() {
+//        // Arrange: Create a teacher
+//        Teacher teacher = new Teacher();
+//        teacher.setLastName("Allen");
+//        teacher.setFirstName("Quincy");
+//
+//        // Act: Save the teacher to the database
+//        Teacher savedTeacher = teacherRepository.save(teacher);
+//
+//        // Assert: Ensure that createdAt is automatically set and not null
+//        assertNotNull(savedTeacher.getCreatedAt());
+//
+//        // Attempt to set a new createdAt time (to check immutability)
+//        LocalDateTime originalCreatedAt = savedTeacher.getCreatedAt();
+//        LocalDateTime newTime = LocalDateTime.now().plusDays(1);
+//        savedTeacher.setCreatedAt(newTime);
+//
+//        // Save the teacher again
+//        Teacher updatedTeacher = teacherRepository.save(savedTeacher);
+//
+//        // Assert: Ensure that createdAt remains unchanged after an attempt to modify it
+//        assertEquals(originalCreatedAt, updatedTeacher.getCreatedAt());
+//    }
+
+    @Test
+    public void testBuilder() {
+        // Arrange: Use the builder pattern
+        Teacher teacher = Teacher.builder()
+                .id(1L)
+                .lastName("Doe")
+                .firstName("John")
+                .createdAt(LocalDateTime.now())
+                .updatedAt(LocalDateTime.now())
+                .build();
+
+        // Assert: Ensure fields are set correctly
+        assertEquals(1L, teacher.getId());
+        assertEquals("Doe", teacher.getLastName());
+        assertEquals("John", teacher.getFirstName());
+    }
+
 
 }

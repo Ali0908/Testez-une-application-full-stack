@@ -22,18 +22,11 @@ public class SpringBootSecurityJwtApplicationTests {
 		assertNotNull(userRepository);
 	}
 
-//
-//	@Test
-//	public void testMain() {
-//		// Mock the SpringApplication.run() method
-//		try {
-//			Mockito.mockStatic(SpringApplication.class);
-//			SpringBootSecurityJwtApplication.main(new String[] {});
-//			Mockito.verify(SpringApplication.class, Mockito.times(1));
-//		} finally {
-//			// Clear mocks to prevent memory leaks
-//			Mockito.clearAllCaches();
-//		}
-//	}
+	@Test
+	public void testMainMethod() {
+		// Test if the SpringBootSecurityJwtApplication main method runs without exceptions
+		SpringBootSecurityJwtApplication.main(new String[]{});
+	}
+
 
 }
