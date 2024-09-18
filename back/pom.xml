@@ -129,12 +129,6 @@
 					<excludes>
 						<exclude>**/SpringBootSecurityJwtApplication.*</exclude>
 						<exclude>**/dto/*</exclude>
-						<exclude>**/models/*</exclude>
-						<exclude>**/payload/request/*</exclude>
-						<exclude>**/payload/response/*</exclude>
-						<exclude>**/exception/*</exclude>
-						<exclude>**/mapper/*</exclude>
-						<exclude>**/repository/*</exclude>
 					</excludes>
 					<outputDirectory>${project.build.directory}/jacoco</outputDirectory>
 				</configuration>
