@@ -32,11 +32,11 @@ public class LoginE2ETest {
         driver.get("http://localhost:4200/login");
 
         // Find the email input field using formControlName and enter email
-        WebElement emailField = wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//input[@formcontrolname='email']")));
+        WebElement emailField = wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//input[@formControlName='email']")));
         emailField.sendKeys("louis@test.com");
 
         // Find the password input field using formControlName and enter password
-        WebElement passwordField = wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//input[@formcontrolname='password']")));
+        WebElement passwordField = wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//input[@formControlName='password']")));
         passwordField.sendKeys("password");
 
         // Find the login button and click it
