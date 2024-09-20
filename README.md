@@ -88,9 +88,9 @@ datasource:
       jpa:
         hibernate:
           ddl-auto: update
-### 3. Build and Run the Application
+### 3. Build, Run and Test the Application
 
-Use Maven to build the project and run the application:
+Use Maven to build, run and test the application:
 
     mvn clean install
     mvn spring-boot:run
@@ -100,8 +100,4 @@ Use Maven to build the project and run the application:
     npm test
 The backend will be running at http://localhost:8080.
 the frontend will be running at http://localhost:4200.
-### API Documentation
-
-The URL to access the Swagger API documentation is:
-http://localhost:3001/swagger-ui/index.html
 
