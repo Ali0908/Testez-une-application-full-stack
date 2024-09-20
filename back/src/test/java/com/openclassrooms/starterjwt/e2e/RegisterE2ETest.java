@@ -28,34 +28,34 @@ public class RegisterE2ETest {
         wait = new WebDriverWait(driver, 10);
     }
 
-//    @Test
-//    public void testSuccessfulRegistration() {
-//        // Navigate to the registration page
-//        driver.get("http://localhost:4200/register");
-//
-//        // Fill in the registration form
-//        WebElement firstNameField = wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//input[@data-testid='First name']")));
-//        firstNameField.sendKeys("John");
-//
-//        WebElement lastNameField = driver.findElement(By.xpath("//input[@data-testid='Last name']"));
-//        lastNameField.sendKeys("Doe");
-//
-//        WebElement emailField = driver.findElement(By.xpath("//input[@data-testid='Email']"));
-//        emailField.sendKeys("john.doe@example.com");
-//
-//        WebElement passwordField = driver.findElement(By.xpath("//input[@data-testid='Password']"));
-//        passwordField.sendKeys("password123");
-//
-//        // Submit the registration form
-//        WebElement submitButton = driver.findElement(By.xpath("//button[@type='submit']"));
-//        submitButton.click();
-//
-//        // Wait for navigation to the login page
-//        wait.until(ExpectedConditions.urlContains("/login"));
-//
-//        // Verify that we are on the login page
-//        assertTrue(driver.getCurrentUrl().contains("/login"));
-//    }
+    @Test
+    public void testSuccessfulRegistration() {
+        // Navigate to the registration page
+        driver.get("http://localhost:4200/register");
+
+        // Fill in the registration form
+        WebElement firstNameField = wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//input[@data-testid='First name']")));
+        firstNameField.sendKeys("Adam");
+
+        WebElement lastNameField = driver.findElement(By.xpath("//input[@data-testid='Last name']"));
+        lastNameField.sendKeys("Doe");
+
+        WebElement emailField = driver.findElement(By.xpath("//input[@data-testid='Email']"));
+        emailField.sendKeys("adam@test.com");
+
+        WebElement passwordField = driver.findElement(By.xpath("//input[@data-testid='Password']"));
+        passwordField.sendKeys("password123");
+
+        // Submit the registration form
+        WebElement submitButton = driver.findElement(By.xpath("//button[@type='submit']"));
+        submitButton.click();
+
+        // Wait for navigation to the login page
+        wait.until(ExpectedConditions.urlContains("/login"));
+
+        // Verify that we are on the login page
+        assertTrue(driver.getCurrentUrl().contains("/login"));
+    }
 
     @Test
     public void testRegistrationFailure() {
