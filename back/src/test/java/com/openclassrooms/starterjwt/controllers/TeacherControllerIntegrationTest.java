@@ -1,25 +1,34 @@
 package com.openclassrooms.starterjwt.controllers;
 
+import com.openclassrooms.starterjwt.dto.TeacherDto;
+import com.openclassrooms.starterjwt.dto.UserDto;
+import com.openclassrooms.starterjwt.mapper.TeacherMapper;
+import com.openclassrooms.starterjwt.mapper.UserMapper;
 import com.openclassrooms.starterjwt.models.Teacher;
+import com.openclassrooms.starterjwt.models.User;
 import com.openclassrooms.starterjwt.payload.request.LoginRequest;
 import com.openclassrooms.starterjwt.payload.response.JwtResponse;
 import com.openclassrooms.starterjwt.repository.TeacherRepository;
+import com.openclassrooms.starterjwt.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.*;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ActiveProfiles;
 
 import javax.transaction.Transactional;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@Transactional
-//@ Todo: Find a solution for activate: ActiveProfiles("test")
+@ActiveProfiles("test")
 public class TeacherControllerIntegrationTest {
 
     @Autowired
@@ -28,11 +37,48 @@ public class TeacherControllerIntegrationTest {
     @Autowired
     private TeacherRepository teacherRepository;
 
+    @Autowired
+    private TeacherMapper teacherMapper;
+
+    @Autowired
+    private UserMapper userMapper;
+
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
     private Teacher existingTeacher;
     private String jwtToken;
 
     @BeforeEach
     public void setUp() {
+        // Create new user with admin role
+        UserDto userDto = new UserDto();
+        userDto.setId(1L);
+        userDto.setEmail("louis@test.com");
+        userDto.setPassword(passwordEncoder.encode("password"));  // Make sure password matches the encoded password
+        userDto.setFirstName("Louis");
+        userDto.setLastName("Doe");
+        userDto.setAdmin(true);
+        userDto.setCreatedAt(LocalDateTime.now());
+        userDto.setUpdatedAt(LocalDateTime.now());
+        User userTest = userMapper.toEntity(userDto);
+        userRepository.save(userTest);
+
+
+        // Create a new teacher
+        TeacherDto teacherDto = new TeacherDto();
+        teacherDto.setId(1L);
+        teacherDto.setFirstName("Odile");
+        teacherDto.setLastName("Roger");
+        teacherDto.setCreatedAt(LocalDateTime.now());
+        teacherDto.setUpdatedAt(LocalDateTime.now());
+        teacherRepository.save(teacherMapper.toEntity(teacherDto));
+
+
+
         // Authenticate and get JWT token
         this.jwtToken = authenticateAndGetToken();
 

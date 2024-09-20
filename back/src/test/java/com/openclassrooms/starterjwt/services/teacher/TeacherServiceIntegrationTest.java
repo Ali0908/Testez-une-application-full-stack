@@ -15,6 +15,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
+// Todo: Remove the @Transactional annotation get inspiration from SessionControllerIntegrationTest
 @Transactional
 @ActiveProfiles("test")
 public class TeacherServiceIntegrationTest {

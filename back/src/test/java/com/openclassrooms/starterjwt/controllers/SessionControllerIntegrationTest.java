@@ -2,11 +2,14 @@ package com.openclassrooms.starterjwt.controllers;
 
 
 import com.openclassrooms.starterjwt.dto.SessionDto;
+import com.openclassrooms.starterjwt.dto.UserDto;
 import com.openclassrooms.starterjwt.mapper.SessionMapper;
+import com.openclassrooms.starterjwt.mapper.UserMapper;
 import com.openclassrooms.starterjwt.models.Session;
+import com.openclassrooms.starterjwt.models.User;
 import com.openclassrooms.starterjwt.payload.request.LoginRequest;
 import com.openclassrooms.starterjwt.payload.response.JwtResponse;
-import com.openclassrooms.starterjwt.services.SessionService;
+import com.openclassrooms.starterjwt.repository.UserRepository;
 import com.openclassrooms.starterjwt.repository.SessionRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -14,19 +17,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.*;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.annotation.Commit;
 import org.springframework.test.context.ActiveProfiles;
 
-import javax.transaction.Transactional;
-
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@Transactional
-// Todo: Find a solution @ActiveProfiles("test")
+@ActiveProfiles("test")
 public class SessionControllerIntegrationTest {
     @Autowired
     private TestRestTemplate restTemplate;
@@ -37,29 +39,83 @@ public class SessionControllerIntegrationTest {
     @Autowired
     private SessionMapper sessionMapper;
 
+    @Autowired
+    private UserMapper userMapper;
+
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private  PasswordEncoder passwordEncoder;
+
+
+
     private Session existingSession;
     private Session updatingSession;
     private String jwtToken;
 
+
     @BeforeEach
     @Commit
     public void setUp() {
+
+        // Create new users
+        UserDto userDto = new UserDto();
+        userDto.setId(1L);
+        userDto.setEmail("louis@test.com");
+        userDto.setPassword(passwordEncoder.encode("password"));  // Make sure password matches the encoded password
+        userDto.setFirstName("Louis");
+        userDto.setLastName("Doe");
+        userDto.setAdmin(true);
+        userDto.setCreatedAt(LocalDateTime.now());
+        userDto.setUpdatedAt(LocalDateTime.now());
+        User userTest = userMapper.toEntity(userDto);
+        userRepository.save(userTest);
+
+
+        UserDto secondUserDto = new UserDto();
+        secondUserDto.setId(2L);
+        secondUserDto.setEmail("benoit@test.com");
+        secondUserDto.setPassword(passwordEncoder.encode("password"));
+        secondUserDto.setFirstName("Benoit");
+        secondUserDto.setLastName("Doe");
+        secondUserDto.setAdmin(false);
+        secondUserDto.setCreatedAt(LocalDateTime.now());
+        secondUserDto.setUpdatedAt(LocalDateTime.now());
+        userRepository.save(userMapper.toEntity(secondUserDto));
+
+        UserDto thirdUserDto = new UserDto();
+        thirdUserDto.setId(3L);
+        thirdUserDto.setEmail("patrick@test.com");
+        thirdUserDto.setPassword(passwordEncoder.encode("password"));
+        thirdUserDto.setFirstName("Patrick");
+        thirdUserDto.setLastName("Doe");
+        thirdUserDto.setAdmin(false);
+        thirdUserDto.setCreatedAt(LocalDateTime.now());
+        thirdUserDto.setUpdatedAt(LocalDateTime.now());
+        userRepository.save(userMapper.toEntity(thirdUserDto));
+
+        SessionDto sessionDto = new SessionDto();
+        sessionDto.setName("First Test Session");
+        sessionDto.setDescription(" First Test Session Description");
+        sessionDto.setDate(new Date());
+        sessionDto.setTeacher_id(1L);
+        sessionRepository.save(sessionMapper.toEntity(sessionDto));
+
+        SessionDto secondSessionDto = new SessionDto();
+        secondSessionDto.setName("Second Test Session");
+        secondSessionDto.setDescription(" Second Test Session Description");
+        secondSessionDto.setDate(new Date());
+        secondSessionDto.setTeacher_id(1L);
+        sessionRepository.save(sessionMapper.toEntity(sessionDto));
+
+
         // Fetch the existing teacher with ID 1 from the database
-        existingSession = sessionRepository.findById(2L).orElseThrow(() ->
-                new IllegalStateException("Session with ID 2 not found in the database"));
+        existingSession = sessionRepository.findById(1L).orElseThrow(() ->
+                new IllegalStateException("Session with ID 1 not found in the database"));
         // Fetch the existing teacher with ID 1 from the database
-        updatingSession = sessionRepository.findById(68L).orElseThrow(() ->
+        updatingSession = sessionRepository.findById(2L).orElseThrow(() ->
                 new IllegalStateException("Session with ID 68 not found in the database"));
-        // Todo: sessionRepository.save(sessionMapper.toEntity(deletingSessionDto)) is not working
-//        deletingSessionDto = new SessionDto();
-//        deletingSessionDto.setId(60L);
-//        deletingSessionDto.setName("Test session deletion");
-//        deletingSessionDto.setDate(new Date());
-//        deletingSessionDto.setTeacher_id(1L);
-//        deletingSessionDto.setDescription("Description of the session to delete");
-//        this.sessionRepository.save(sessionMapper.toEntity(deletingSessionDto));
-//        deletingSession = sessionRepository.findById(60L).orElseThrow(() ->
-//                new IllegalStateException("Session with ID 60L not found in the database"));
         this.jwtToken = authenticateAndGetToken();
     }
 
@@ -220,18 +276,6 @@ public class SessionControllerIntegrationTest {
         // Assert: Check the response status is NotFound
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
     }
-
-//    @Test
-//    public void testDelete_Success() {
-//                // URL to delete the existing session
-//                String url = "/api/session/" + deletingSession.getId();
-//                HttpHeaders headers = new HttpHeaders();
-//                headers.setBearerAuth(jwtToken);  // Add the JWT token to headers
-//                HttpEntity<Void> entity = new HttpEntity<>(headers);
-//                ResponseEntity<?> response = restTemplate.exchange(url, HttpMethod.DELETE, entity, Object.class);
-//                // Assert: Check the response status is OK
-//                assertEquals(HttpStatus.OK, response.getStatusCode());
-//        }
     @Test
     public void testParticipate_Success() {
         // Arrange: Set up valid sessionId and userId
