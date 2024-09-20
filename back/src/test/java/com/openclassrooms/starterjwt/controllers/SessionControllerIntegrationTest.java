@@ -15,6 +15,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.*;
 import org.springframework.test.annotation.Commit;
+import org.springframework.test.context.ActiveProfiles;
 
 import javax.transaction.Transactional;
 
@@ -25,6 +26,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Transactional
+// Todo: Find a solution @ActiveProfiles("test")
 public class SessionControllerIntegrationTest {
     @Autowired
     private TestRestTemplate restTemplate;
@@ -35,13 +37,8 @@ public class SessionControllerIntegrationTest {
     @Autowired
     private SessionMapper sessionMapper;
 
-    @Autowired
-    private SessionService sessionService;
-
     private Session existingSession;
     private Session updatingSession;
-    private Session deletingSession;
-    private SessionDto deletingSessionDto;
     private String jwtToken;
 
     @BeforeEach

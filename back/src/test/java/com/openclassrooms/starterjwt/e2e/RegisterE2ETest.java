@@ -12,6 +12,8 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import io.github.bonigarcia.wdm.WebDriverManager;
 
+import java.util.UUID;
+
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class RegisterE2ETest {
@@ -30,6 +32,10 @@ public class RegisterE2ETest {
 
     @Test
     public void testSuccessfulRegistration() {
+
+        // Generate a unique email
+        String uniqueEmail = "adam_" + UUID.randomUUID().toString() + "@test.com";
+
         // Navigate to the registration page
         driver.get("http://localhost:4200/register");
 
@@ -41,7 +47,7 @@ public class RegisterE2ETest {
         lastNameField.sendKeys("Doe");
 
         WebElement emailField = driver.findElement(By.xpath("//input[@data-testid='Email']"));
-        emailField.sendKeys("adam@test.com");
+        emailField.sendKeys(uniqueEmail);
 
         WebElement passwordField = driver.findElement(By.xpath("//input[@data-testid='Password']"));
         passwordField.sendKeys("password123");

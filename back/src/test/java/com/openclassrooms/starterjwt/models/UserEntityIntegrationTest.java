@@ -2,6 +2,7 @@ package com.openclassrooms.starterjwt.models;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 
 import java.time.LocalDateTime;
 
@@ -14,6 +15,7 @@ import javax.validation.ValidatorFactory;
 import java.util.Set;
 
 @SpringBootTest
+@ActiveProfiles("test")
 public class UserEntityIntegrationTest {
 
     @Test
