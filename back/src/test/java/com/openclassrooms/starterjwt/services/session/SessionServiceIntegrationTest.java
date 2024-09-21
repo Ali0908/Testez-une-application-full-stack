@@ -1,7 +1,11 @@
 package com.openclassrooms.starterjwt.services.session;
 
+import com.openclassrooms.starterjwt.dto.SessionDto;
+import com.openclassrooms.starterjwt.dto.UserDto;
 import com.openclassrooms.starterjwt.exception.BadRequestException;
 import com.openclassrooms.starterjwt.exception.NotFoundException;
+import com.openclassrooms.starterjwt.mapper.SessionMapper;
+import com.openclassrooms.starterjwt.mapper.UserMapper;
 import com.openclassrooms.starterjwt.models.Session;
 import com.openclassrooms.starterjwt.models.User;
 import com.openclassrooms.starterjwt.repository.SessionRepository;
@@ -11,18 +15,16 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDate;
-import java.time.ZoneId;
-import java.util.ArrayList;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
-// Todo: Remove the @Transactional annotation get inspiration from SessionControllerIntegrationTest
 @Transactional
 @ActiveProfiles("test")
 class SessionServiceIntegrationTest {
@@ -36,30 +38,51 @@ class SessionServiceIntegrationTest {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private UserMapper userMapper;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private SessionMapper sessionMapper;
+
+
     private Session session;
     private User user;
 
     @BeforeEach
     void setUp() {
         // Create and save a session
-        session = new Session();
-        session.setName("Test Session");
-        session.setDescription("This is a test session description.");  // Set a valid description
-        ZoneId defaultZoneId = ZoneId.systemDefault();
-        LocalDate localDate = LocalDate.now();
-        Date date =  Date.from(localDate.atStartOfDay(defaultZoneId).toInstant());
-        session.setDate(date);  // Set a valid date
-        session.setUsers(new ArrayList<>()); // Initialize the users set
-        session = sessionRepository.save(session);
+//        session = new Session();
+//        session.setName("Test Session");
+//        session.setDescription("This is a test session description.");  // Set a valid description
+//        ZoneId defaultZoneId = ZoneId.systemDefault();
+//        LocalDate localDate = LocalDate.now();
+//        Date date =  Date.from(localDate.atStartOfDay(defaultZoneId).toInstant());
+//        session.setDate(date);  // Set a valid date
+//        session.setUsers(new ArrayList<>()); // Initialize the users set
+//        session = sessionRepository.save(session);
+
+        SessionDto sessionDto = new SessionDto();
+        sessionDto.setName("First Test Session");
+        sessionDto.setDescription(" First Test Session Description");
+        sessionDto.setDate(new Date());
+        sessionDto.setTeacher_id(1L);
+        session = sessionRepository.save(sessionMapper.toEntity(sessionDto));
 
         // Create and save a user
-        user = new User();
-        user.setLastName("Test");
-        user.setFirstName("User");
-        user.setEmail("user@test.com");
-        user.setPassword("password");
-        user.setAdmin(false);
-        user = userRepository.save(user);
+        UserDto userDto = new UserDto();
+        userDto.setId(1L);
+        userDto.setEmail("louis@test.com");
+        userDto.setPassword(passwordEncoder.encode("password"));  // Make sure password matches the encoded password
+        userDto.setFirstName("Louis");
+        userDto.setLastName("Doe");
+        userDto.setAdmin(true);
+        userDto.setCreatedAt(LocalDateTime.now());
+        userDto.setUpdatedAt(LocalDateTime.now());
+        User userTest = userMapper.toEntity(userDto);
+        user = userRepository.save(userTest);
     }
 
     @Test

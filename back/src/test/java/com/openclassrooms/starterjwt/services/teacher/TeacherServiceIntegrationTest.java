@@ -1,5 +1,7 @@
 package com.openclassrooms.starterjwt.services.teacher;
 
+import com.openclassrooms.starterjwt.dto.TeacherDto;
+import com.openclassrooms.starterjwt.mapper.TeacherMapper;
 import com.openclassrooms.starterjwt.models.Teacher;
 import com.openclassrooms.starterjwt.repository.TeacherRepository;
 import com.openclassrooms.starterjwt.services.TeacherService;
@@ -8,15 +10,13 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
-// Todo: Remove the @Transactional annotation get inspiration from SessionControllerIntegrationTest
-@Transactional
 @ActiveProfiles("test")
 public class TeacherServiceIntegrationTest {
     @Autowired
@@ -25,24 +25,27 @@ public class TeacherServiceIntegrationTest {
     @Autowired
     private TeacherRepository teacherRepository;
 
+    @Autowired
+    private TeacherMapper teacherMapper;
+
     private Teacher firstTeacher;
     private Teacher secondTeacher;
 
     @BeforeEach
     void setUp() {
+        TeacherDto teacherDto = new TeacherDto();
+        teacherDto.setId(1L);
+        teacherDto.setFirstName("Smith");
+        teacherDto.setLastName("John");
+        teacherDto.setCreatedAt(LocalDateTime.now());
+        firstTeacher = teacherRepository.save(teacherMapper.toEntity(teacherDto));
 
-        // Create and save teachers
-        firstTeacher = new Teacher();
-        firstTeacher.setLastName("Smith");
-        firstTeacher.setFirstName("John");
-        firstTeacher.setCreatedAt(java.time.LocalDateTime.now().minusDays(1));
-        teacherRepository.save(firstTeacher);
-
-        secondTeacher = new Teacher();
-        secondTeacher.setLastName("Doe");
-        secondTeacher.setFirstName("Jane");
-        secondTeacher.setCreatedAt(java.time.LocalDateTime.now().minusDays(1));
-        teacherRepository.save(secondTeacher);
+        TeacherDto secondTeacherDto = new TeacherDto();
+        secondTeacherDto.setId(2L);
+        secondTeacherDto.setFirstName("Doe");
+        secondTeacherDto.setLastName("Jane");
+        secondTeacherDto.setCreatedAt(LocalDateTime.now());
+        secondTeacher = teacherRepository.save(teacherMapper.toEntity(secondTeacherDto));
     }
 
     @Test

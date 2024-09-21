@@ -4,25 +4,18 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import java.time.LocalDateTime;
 import java.util.Date;
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
-//@Transactional
-//@Rollback
 @ActiveProfiles("test")
 public class SessionEntityIntegrationTest {
 
-    @Autowired
-    private EntityManager entityManager;
 
     private Teacher teacher1, teacher2;
     private Session session1, session2, session3;
@@ -106,74 +99,5 @@ public class SessionEntityIntegrationTest {
         session1.setUpdatedAt(updatedAt);
         assertEquals(updatedAt, session1.getUpdatedAt(), "The updatedAt field should be correctly updated");
     }
-//
-//    @Test
-//    public void testManyToManyRelationshipWithUsers() {
-//        // Arrange: Create some users
-//        User user1 = new User();
-//        user1.setEmail("user1@example.com");
-//        user1.setPassword("password1");
-//
-//        User user2 = new User();
-//        user2.setEmail("user2@example.com");
-//        user2.setPassword("password2");
-//
-//        // Persist users
-//        entityManager.persist(user1);
-//        entityManager.persist(user2);
-//
-//        // Add users to the session
-//        session1.setUsers(List.of(user1, user2));
-//
-//        // Act: Persist the session
-//        entityManager.persist(session1);
-//        entityManager.flush();
-//        entityManager.clear();
-//
-//        // Retrieve the session from the database
-//        Session retrievedSession = entityManager.find(Session.class, session1.getId());
-//
-//        // Assert: Check if users are correctly associated
-//        assertNotNull(retrievedSession.getUsers());
-//        assertEquals(2, retrievedSession.getUsers().size(), "There should be two users associated with the session.");
-//    }
-//
-//    @Test
-//    public void testPersistAndRetrieveSession() {
-//        // Act: Persist the session
-//        entityManager.persist(session1);
-//        entityManager.flush();
-//        entityManager.clear();
-//
-//        // Retrieve the session from the database
-//        Session retrievedSession = entityManager.find(Session.class, session1.getId());
-//
-//        // Assert: Check that the retrieved session matches the original session
-//        assertNotNull(retrievedSession);
-//        assertEquals(session1.getName(), retrievedSession.getName());
-//        assertEquals(session1.getDescription(), retrievedSession.getDescription());
-//        assertEquals(session1.getTeacher().getFirstName(), retrievedSession.getTeacher().getFirstName());
-//    }
-//
-//    @Test
-//    public void testCreatedAtAndUpdatedAt_AuditingFields() {
-//        // Act: Persist the session
-//        entityManager.persist(session1);
-//        entityManager.flush();
-//
-//        // Assert: Check if createdAt and updatedAt are automatically populated
-//        assertNotNull(session1.getCreatedAt(), "The createdAt field should be automatically populated.");
-//        assertNotNull(session1.getUpdatedAt(), "The updatedAt field should be automatically populated.");
-//
-//        // Store the original updatedAt
-//        LocalDateTime originalUpdatedAt = session1.getUpdatedAt();
-//
-//        // Act: Update the session and flush
-//        session1.setDescription("Updated Description");
-//        entityManager.flush();
-//
-//        // Assert: Check if updatedAt is updated
-//        assertNotEquals(originalUpdatedAt, session1.getUpdatedAt(), "The updatedAt field should be updated.");
-//    }
 
 }
