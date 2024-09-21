@@ -1,5 +1,4 @@
 package com.openclassrooms.starterjwt.security.jwt;
-import com.openclassrooms.starterjwt.security.services.UserDetailsServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.mockito.Mockito;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -8,6 +7,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.junit.jupiter.api.Test;
@@ -18,7 +18,8 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 
-@SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT) // Replace with your security config
+@SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
+@ActiveProfiles("test")
 public class AuthTokenFilterIntegrationTest {
 
     @BeforeEach
@@ -37,23 +38,8 @@ public class AuthTokenFilterIntegrationTest {
     @MockBean
     private JwtUtils jwtUtils;
 
-    @MockBean
-    private UserDetailsServiceImpl userDetailsService;
-
     @Autowired
     private AuthTokenFilter authTokenFilter;
-
-    // Todo: Error: java.lang.AssertionError: Status expected:<200> but was:<401> -> Check valid token
-//    @Test
-//    public void testValidToken_SetsAuthentication() throws Exception {
-//        // Arrange: Mock a valid JWT token
-//        String validToken = "openclassrooms"; // Replace with a valid token
-//
-//        // Act: Perform a request with the token in Authorization header
-//        mockMvc.perform(MockMvcRequestBuilders.get("/api/session")
-//                        .header("Authorization", "Bearer " + validToken))
-//                .andExpect(status().isOk());
-//    }
 
     @Test
     public void testInvalidToken_DoesNotSetAuthentication() throws Exception {
