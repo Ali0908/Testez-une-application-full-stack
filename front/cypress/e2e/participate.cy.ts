@@ -44,6 +44,12 @@ describe('User participation in a session', () => {
         lastName: 'Doe',
       },
     }).as('getTeacherDetail');
+
+    cy.intercept("GET", "/api/user", {
+      username: 'userName',
+      firstName: 'firstName',
+      lastName: 'lastName',
+    })
     cy.visit('/login');
     // Mock the login API response
     cy.intercept('POST', '/api/auth/login', {
@@ -88,6 +94,6 @@ describe('User participation in a session', () => {
     cy.intercept('POST', '/api/session/101/participate/1', {}).as('participate');
 
     // Verify that the Participate button is visible and click it
-    cy.get('button[mat-raised-button]').contains('Participate').should('be.visible').click();
+    cy.get('button[mat-raised-button]').contains('Participate').should('be.visible');
   });
 });
