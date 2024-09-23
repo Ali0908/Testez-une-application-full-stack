@@ -15,7 +15,7 @@ describe('Logout spec', () => {
     });
 
     // Mock session data retrieval
-    cy.intercept('GET', '/api/session', []).as('session');
+    cy.intercept('GET', '/api/session', []);
 
     // Perform login action
     cy.get('input[formControlName=email]').type('yoga@studio.com');
@@ -30,7 +30,7 @@ describe('Logout spec', () => {
     cy.get('app-root span').contains('Logout').should('be.visible').click();
 
     // Check that the app navigates to the root URL
-    cy.location('pathname').should('eq', '/'); // This verifies the redirection to the root URL
+    cy.location('pathname').should('eq', '/');
 
     // Check that session information is cleared from localStorage
     cy.window().its('localStorage').invoke('getItem', 'session').should('be.null');

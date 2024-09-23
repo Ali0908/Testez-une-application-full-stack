@@ -9,9 +9,9 @@ describe('Detail Component', () => {
         username: 'userName',
         firstName: 'firstName',
         lastName: 'lastName',
-        admin: false, // User is not an admin
+        admin: false,
       },
-    }).as('session');
+    });
 
     // Mock the list of sessions (move this up before login action)
     cy.intercept('GET', '/api/session', {
@@ -24,7 +24,7 @@ describe('Detail Component', () => {
           users: [],
         },
       ],
-    }).as('getSessions');
+    });
 
     // Mock the session detail API response
     cy.intercept('GET', '/api/session/101', {
@@ -33,7 +33,7 @@ describe('Detail Component', () => {
         name: 'Yoga Session 1',
         date: '2024-09-09T10:00:00',
         description: 'A relaxing yoga session.',
-        users: [], // No participants initially
+        users: [],
         teacher_id: 1,
       },
     }).as('getSessionDetail');
@@ -43,7 +43,7 @@ describe('Detail Component', () => {
         firstName: 'John',
         lastName: 'Doe',
       },
-    }).as('getTeacherDetail');
+    });
     cy.visit('/login');
     // Mock the login API response
     cy.intercept('POST', '/api/auth/login', {
@@ -53,18 +53,14 @@ describe('Detail Component', () => {
         username: 'userName',
         firstName: 'firstName',
         lastName: 'lastName',
-        admin: false, // User is not an admin for this test
+        admin: false,
       },
-    }).as('login');
+    });
 
     // Perform login
     cy.get('input[formControlName=email]').type('yoga@studio.com');
     cy.get('input[formControlName=password]').type('test!1234');
     cy.get('form').submit(); // Explicit form submit
-
-    // Wait for login and session intercepts
-    // cy.wait('@login');
-    // cy.wait('@session');
 
     // Ensure the user is redirected to the session list page after login
     cy.url({ timeout: 10000 }).should('include', '/sessions');
@@ -79,14 +75,6 @@ describe('Detail Component', () => {
 
     // Verify back button presence
     cy.get('button[mat-icon-button]').should('be.visible');
-
-    // Verify teacher information if applicable
-    // cy.get('mat-card-subtitle').should(($el) => {
-      // Check if element exists
-    //   if ($el.length) {
-    //     cy.wrap($el).contains('Teacher:'); // Adjust text based on your implementation
-    //   }
-    // });
 
     // Verify session image
     cy.get('img.picture').should('be.visible');
