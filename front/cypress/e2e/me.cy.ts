@@ -104,4 +104,5 @@ describe('Me component spec', () => {
     // Verify that the user is redirected to the home page (or login page)
     cy.url().should('include', '/'); // Adjust if it redirects to the login page
   });
+
 });
