@@ -1,4 +1,4 @@
-describe('User participation in a session', () => {
+describe('Detail Component', () => {
   beforeEach(() => {
 
     // Mock session API data
@@ -70,24 +70,32 @@ describe('User participation in a session', () => {
     cy.url({ timeout: 10000 }).should('include', '/sessions');
   });
 
-  it('should allow a user to participate in a session', () => {
-    // Ensure the sessions are loaded
-    // cy.wait('@getSessions', { timeout: 10000 }); // Now wait for the sessions to be loaded
-
-    // Verify that session details are displayed
-    cy.get('mat-card').contains('Yoga Session 1').should('be.visible');
+  it('should display session details', () => {
 
     // Click on the Detail button of the session
     cy.get('button[mat-raised-button]').contains('Detail').click();
+    // Verify session title
+    cy.get('mat-card-title h1').should('be.visible');
 
-    // Ensure the session detail is loaded
-    // cy.wait('@getSessionDetail');
-    // cy.wait('@getTeacherDetail');
+    // Verify back button presence
+    cy.get('button[mat-icon-button]').should('be.visible');
 
-    // Mock the participation API response
-    cy.intercept('POST', '/api/session/101/participate/1', {}).as('participate');
+    // Verify teacher information if applicable
+    cy.get('mat-card-subtitle').should(($el) => {
+      // Check if element exists
+      if ($el.length) {
+        cy.wrap($el).contains('Teacher:'); // Adjust text based on your implementation
+      }
+    });
 
-    // Verify that the Participate button is visible and click it
-    cy.get('button[mat-raised-button]').contains('Participate').should('be.visible').click();
+    // Verify session image
+    cy.get('img.picture').should('be.visible');
+
+    // Verify session description
+    cy.get('.description p').contains('Description:').should('be.visible');
+
+    // Verify creation and update date
+    cy.get('.created').should('be.visible');
+    cy.get('.updated').should('be.visible');
   });
 });

@@ -53,17 +53,6 @@ class SessionServiceIntegrationTest {
 
     @BeforeEach
     void setUp() {
-        // Create and save a session
-//        session = new Session();
-//        session.setName("Test Session");
-//        session.setDescription("This is a test session description.");  // Set a valid description
-//        ZoneId defaultZoneId = ZoneId.systemDefault();
-//        LocalDate localDate = LocalDate.now();
-//        Date date =  Date.from(localDate.atStartOfDay(defaultZoneId).toInstant());
-//        session.setDate(date);  // Set a valid date
-//        session.setUsers(new ArrayList<>()); // Initialize the users set
-//        session = sessionRepository.save(session);
-
         SessionDto sessionDto = new SessionDto();
         sessionDto.setName("First Test Session");
         sessionDto.setDescription(" First Test Session Description");
