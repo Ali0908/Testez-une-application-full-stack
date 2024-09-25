@@ -94,26 +94,40 @@ datasource:
 Use Maven to build, run and test the application:
 
 Install the project dependencies:
-    `mvn clean install`
-     Run project
-    `mvn spring-boot:run`
-    Test project
-    `mvn test`
-    Generate report coverage
-    `mvn test jacoco:report`
+
+    mvn clean install
+Run project
+
+    mvn spring-boot:run
+Test project
+
+    mvn test
+Generate report coverage
+
+    mvn test jacoco:report
 
 ### FrontEnd
 Use npm to install the project dependencies and run the Angular application:
+
 Install the project dependencies:
-    `npm install`
-    Run project
-    `ng serve`
-    Test project
-    `npm test`
-    Generate  jest report coverage
-    `npm run test: jest--coverage`
-    Generate e2e report coverage
-    `npx nyc report --reporter=lcov --reporter=text-summary`
+
+    npm install
+
+Run project
+
+    ng serve
+
+Test project
+
+    npm test
+
+Generate  jest report coverage
+
+    npm run test: jest--coverage
+
+Generate e2e report coverage
+
+    npx nyc report --reporter=lcov --reporter=text-summary
 
 ### 4. Access the Application
 The backend will be running at http://localhost:8080.
