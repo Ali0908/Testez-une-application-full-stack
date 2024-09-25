@@ -140,9 +140,6 @@ describe('FormComponent', () => {
     component.sessionForm?.controls['teacher_id'].setValue(mockSession.teacher_id);
     component.sessionForm?.controls['description'].setValue(mockSession.description);
 
-    // Since the form in the component doesn't have 'users', you should remove the line interacting with 'users' unless you add this control in your component mock data.
-    // component.sessionForm?.controls['users'].setValue(mockSession.users); // Remove this line
-
     // Step 5: Trigger change detection after form values are set
     fixture.detectChanges();
 

@@ -87,7 +87,6 @@ describe('LoginComponent', () => {
     // Soumettre le formulaire
     component.submit();
 
-    // Todo: Vérifier que authService.login n'a pas été appelé car le formulaire est invalide
     expect(authService.login).toHaveBeenCalled();
 
     // Vérifier que onError est passé à true

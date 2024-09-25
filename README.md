@@ -69,7 +69,7 @@ Create a new database and user:
     GRANT ALL PRIVILEGES ON your_database_name.* TO 'your_username'@'localhost';
     FLUSH PRIVILEGES;
 
-3.Configure the database connection settings in the application.properties or application.yml file of the Spring Boot project:
+Configure the database connection settings in the application.properties or application.yml file of the Spring Boot project:
 
 application.properties:
 
@@ -90,14 +90,26 @@ datasource:
           ddl-auto: update
 ### 3. Build, Run and Test the Application
 
+### BackEnd
 Use Maven to build, run and test the application:
 
-    mvn clean install
-    mvn spring-boot:run
-    npm install
-    ng serve
-    mvn test
-    npm test
+Install the project dependencies:
+    `mvn clean install`
+     Run project
+    `mvn spring-boot:run`
+    Test project
+    `mvn test`
+
+### FrontEnd
+Use npm to install the project dependencies and run the Angular application:
+Install the project dependencies:
+    `npm install`
+    Run project
+    `ng serve`
+    Test project
+    `npm test`
+
+### 4. Access the Application
 The backend will be running at http://localhost:8080.
 the frontend will be running at http://localhost:4200.
 
