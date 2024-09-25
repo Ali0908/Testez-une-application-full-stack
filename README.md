@@ -99,6 +99,8 @@ Install the project dependencies:
     `mvn spring-boot:run`
     Test project
     `mvn test`
+    Generate report coverage
+    `mvn test jacoco:report`
 
 ### FrontEnd
 Use npm to install the project dependencies and run the Angular application:
@@ -108,6 +110,10 @@ Install the project dependencies:
     `ng serve`
     Test project
     `npm test`
+    Generate  jest report coverage
+    `npm run test: jest--coverage`
+    Generate e2e report coverage
+    `npx nyc report --reporter=lcov --reporter=text-summary`
 
 ### 4. Access the Application
 The backend will be running at http://localhost:8080.
